@@ -4,7 +4,7 @@
  * A. Kamisiński
  *
  * Build:
- *  g++ solve_gmpl.cpp -o solve_gmpl -lClp -lCoinUtils
+ *  g++ solver.cpp -o solve_gmpl -lClp -lCoinUtils
  * -------------------------------------------------------------------------
 */
 
@@ -40,7 +40,7 @@ int main( int argc, char *argv[] )
 		return 1;
 	}
 	
-	model.setLogLevel( 1 );
+	model.setLogLevel( 2 );
 	status = model.primal();
 	printf( "----------------------------------------\n" );
 

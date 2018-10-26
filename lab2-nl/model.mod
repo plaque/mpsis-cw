@@ -21,7 +21,7 @@ param A{e in E, v in V}, integer, >= 0, default 0;
 param B{e in E, v in V}, integer, >= 0, default 0;
 
 /* Capacity */
-param c{e in E}, integer, >= 1, default 5;
+param c{e in E}, integer, >= 0, default 5;
 
 /* KSI xD */
 param KSI{e in E}, integer, >= 0;
@@ -31,13 +31,13 @@ var x{e in E, d in D}, integer, >= 0;
 var y{e in E}, integer, >= 0;
 
 /* Objective function 'z' */
-minimize z: (sum{e in E} KSI[e]*y[e]);
+minimize z: sum{e in E} (KSI[e]*y[e]);
 
 /* Constraints */
-s.t. C1{d in D, v in V}: if (v == s[d]) then (sum{e in E} (x[e, d] * A[e, v] - x[e, d] * B[e, v])) == h[d];
-s.t. C2{d in D, v in V}: if (v == t[d]) then (sum{e in E} (x[e, d] * A[e, v] - x[e, d] * B[e, v])) == -h[d];
-s.t. C3{d in D, v in V}: if (v != t[d] and v != s[d]) then (sum{e in E} (x[e, d] * A[e, v] - x[e, d] * B[e, v])) == 0;
-s.t. C4{e in E}: (sum{d in D} x[e,d]) == y[e];
+s.t. C1{d in D, v in V}: if (v == s[d]) then (sum{e in E} (A[e, v]*x[e, d] - B[e, v]*x[e, d])) == h[d];
+s.t. C2{d in D, v in V}: if ((v != t[d]) and (v != s[d])) then (sum{e in E} (A[e, v]*x[e, d] - B[e, v]*x[e, d])) == 0;
+s.t. C3{d in D, v in V}: if (v == t[d]) then (sum{e in E} (A[e, v]*x[e, d] - B[e, v]*x[e, d])) == -h[d];
+s.t. C4{e in E}: (sum{d in D} (x[e, d])) == y[e];
 s.t. C5{e in E}: y[e] <= c[e];
 
 
