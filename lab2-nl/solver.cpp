@@ -40,7 +40,7 @@ int main( int argc, char *argv[] )
 		return 1;
 	}
 	
-	model.setLogLevel( 0 );
+	model.setLogLevel( 1 );
 	status = model.primal();
 	printf( "----------------------------------------\n" );
 

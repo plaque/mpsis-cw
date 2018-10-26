@@ -28,12 +28,21 @@ param KSI{e in E}, integer, >= 0;
 
 /* Decision variables */
 var x{e in E, d in D}, integer, >= 0;
+var y{e in E}, integer, >= 0;
 
 /* Objective function 'z' */
-minimize z: sum{e in E, d in D} x[e,d]*KSI[e];
+minimize z: sum{e in E} KSI[e]*y[e];
 
 /* Constraints */
-s.t. C1: forall{v in V, d in D : v == s[d]} (sum{e in E} (x[e, d] * A[e, v] - x[e, d] * B[e, v])) == h[d];
-s.t. C2: forall{v in V, d in D : v == t[d]} (sum{e in E} (x[e, d] * A[e, v] - x[e, d] * B[e, v])) == -h[d];
-s.t. C3: forall{v in V, d in D : v != t[d] and v != s[d]} sum{e in E} x[e, d] * A[e, v] - x[e, d] * B[e, v] == 0;
-s.t. C4: forall{e in E} sum{d in D} x[e,d] <= c[e];
+s.t. C1{v in V, d in D}: if (v == s[d]) then (sum{e in E} (x[e, d] * A[e, v] - x[e, d] * B[e, v])) == h[d];
+s.t. C2{v in V, d in D}: if (v == t[d]) then (sum{e in E} (x[e, d] * A[e, v] - x[e, d] * B[e, v])) == -h[d];
+s.t. C3{v in V, d in D}: if (v != t[d] and v != s[d]) then (sum{e in E} (x[e, d] * A[e, v] - x[e, d] * B[e, v])) == 0;
+s.t. C4{e in E}: (sum{d in D} x[e,d]) == y[e];
+s.t. C5{e in E}: y[e] <= c[e];
+
+
+printf{e in E, v in V} "A[%d,%d] = %d, B[%d,%d] = %d\n", e, v, A[e, v], e, v, B[e, v];
+printf{e in E} "KSI[%d] = %d, c[%d] = %d\n", e, KSI[e], e, c[e];
+printf{d in D} "s[%d] = %d, t[%d] = %d, h[%d] = %d\n", d, s[d], d, t[d], d, h[d];
+
+end;
