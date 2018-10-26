@@ -2,9 +2,9 @@
 # Model UFAP, N/L
 
 /* Number of vertexes, edges, dispositions */
-param V_count, integer, >= 1;
-param E_count, integer, >= 1;
-param D_count, integer, >= 1;
+param V_count, integer, >= 0;
+param E_count, integer, >= 0;
+param D_count, integer, >= 0;
 
 /* Sets of vertexes, edges and dispositions */
 set V, default {1..V_count};
@@ -12,33 +12,32 @@ set E, default {1..E_count};
 set D, default {1..D_count};
 
 /* Requirements */
-param h{d in D}, integer, >= 0;
-param s{d in D}, integer, >= 0;
-param t{d in D}, integer, >= 0;
+param h{d in D} >= 0;
+param s{d in D} >= 0;
+param t{d in D} >= 0;
 
 /* Aev, Bev as params */
-param A{e in E, v in V}, integer, >= 0, default 0;
-param B{e in E, v in V}, integer, >= 0, default 0;
+param A{e in E, v in V}, >= 0, default 0;
+param B{e in E, v in V}, >= 0, default 0;
 
 /* Capacity */
-param c{e in E}, integer, >= 0, default 5;
+param c{e in E} >= 0, default 5;
 
 /* KSI xD */
-param KSI{e in E}, integer, >= 0;
+param KSI{e in E} >= 0;
 
 /* Decision variables */
-var x{e in E, d in D}, integer, >= 0;
-var y{e in E}, integer, >= 0;
+var x{e in E, d in D} >= 0;
+var y{e in E} >= 0;
 
 /* Objective function 'z' */
-minimize z: sum{e in E} (KSI[e]*y[e]);
+minimize z: sum{e in E} KSI[e]*(sum{d in D} x[e,d]);
 
 /* Constraints */
-s.t. C1{d in D, v in V}: if (v == s[d]) then (sum{e in E} (A[e, v]*x[e, d] - B[e, v]*x[e, d])) == h[d];
-s.t. C2{d in D, v in V}: if ((v != t[d]) and (v != s[d])) then (sum{e in E} (A[e, v]*x[e, d] - B[e, v]*x[e, d])) == 0;
-s.t. C3{d in D, v in V}: if (v == t[d]) then (sum{e in E} (A[e, v]*x[e, d] - B[e, v]*x[e, d])) == -h[d];
-s.t. C4{e in E}: (sum{d in D} (x[e, d])) == y[e];
-s.t. C5{e in E}: y[e] <= c[e];
+s.t. c1{d in D, v in V : v == s[d]} : sum{e in E} (A[e,v]*x[e,d] - B[e,v]*x[e,d]) == h[d];
+s.t. c2{d in D, v in V : v <> s[d] and v <> t[d]} : sum{e in E} (A[e,v]*x[e,d] - B[e,v]*x[e,d]) == 0;
+s.t. c3{d in D, v in V : v == t[d]} : sum{e in E} (A[e,v]*x[e,d] - B[e,v]*x[e,d]) == -h[d];
+s.t. c4{e in E} : sum{d in D} x[e,d] <= c[e];
 
 
 printf{e in E, v in V} "A[%d,%d] = %d, B[%d,%d] = %d\n", e, v, A[e, v], e, v, B[e, v];
