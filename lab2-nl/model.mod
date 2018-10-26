@@ -31,12 +31,12 @@ var x{e in E, d in D}, integer, >= 0;
 var y{e in E}, integer, >= 0;
 
 /* Objective function 'z' */
-minimize z: sum{e in E} KSI[e]*y[e];
+minimize z: (sum{e in E} KSI[e]*y[e]);
 
 /* Constraints */
-s.t. C1{v in V, d in D}: if (v == s[d]) then (sum{e in E} (x[e, d] * A[e, v] - x[e, d] * B[e, v])) == h[d];
-s.t. C2{v in V, d in D}: if (v == t[d]) then (sum{e in E} (x[e, d] * A[e, v] - x[e, d] * B[e, v])) == -h[d];
-s.t. C3{v in V, d in D}: if (v != t[d] and v != s[d]) then (sum{e in E} (x[e, d] * A[e, v] - x[e, d] * B[e, v])) == 0;
+s.t. C1{d in D, v in V}: if (v == s[d]) then (sum{e in E} (x[e, d] * A[e, v] - x[e, d] * B[e, v])) == h[d];
+s.t. C2{d in D, v in V}: if (v == t[d]) then (sum{e in E} (x[e, d] * A[e, v] - x[e, d] * B[e, v])) == -h[d];
+s.t. C3{d in D, v in V}: if (v != t[d] and v != s[d]) then (sum{e in E} (x[e, d] * A[e, v] - x[e, d] * B[e, v])) == 0;
 s.t. C4{e in E}: (sum{d in D} x[e,d]) == y[e];
 s.t. C5{e in E}: y[e] <= c[e];
 
