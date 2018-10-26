@@ -66,7 +66,7 @@ int main( int argc, char *argv[] )
 
 	for ( i = columns_count; i > 0; i-- )
 	{
-		printf( "x[%d] = %g\n", columns_count - i + 1, column_primal[ i - 1 ] );
+		printf( "y[%d] = %g\n", columns_count - i + 1, column_primal[ i - 1 ] );
 	}
 
 	return 0;
